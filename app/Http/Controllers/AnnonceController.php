@@ -17,6 +17,10 @@ class AnnonceController extends Controller {
     public function create() {
         return view('annonces.create');
     }
+    public function filterByCategory($category) {
+        $annonces = Annonce::where('categorie', $category)->latest()->paginate(10);
+        return view('annonces.index', compact('annonces'));
+    }
 
     public function store(Request $request) {
         $request->validate([

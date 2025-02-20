@@ -15,7 +15,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/annonce/{id}', [AnnonceController::class, 'update'])->name('annonce.update');
     Route::delete('/annonce/{id}', [AnnonceController::class, 'destroy'])->name('annonce.destroy');
     Route::get('/annonce/index', [AnnonceController::class, 'index'])->name('annonce.index');
-
+    Route::get('/annonces/category/{category}', [AnnonceController::class, 'filterByCategory'])->name('annonces.filterByCategory');
 
     Route::post('/commentaire', [CommentaireController::class, 'store'])->name('commentaire.store');
 });

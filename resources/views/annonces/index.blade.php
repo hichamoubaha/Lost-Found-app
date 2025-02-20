@@ -1,37 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="container mx-auto px-4 py-8">
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-bullhorn text-blue-500 mr-2"></i> Annonces
+        </h1>
 
-    <h1 class="text-2xl font-bold">Annonces</h1>
-
-    <!-- Formulaire de recherche -->
-    <form action="{{ route('annonce.index') }}" method="GET" class="mb-4">
-        <input type="text" name="search" placeholder="Rechercher un objet..." class="p-2 border rounded">
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded">Rechercher</button>
-    </form>
-
-    <!-- Filtrer par catégorie -->
-    <div class="mb-4">
-        @foreach(['Vêtements', 'Électronique', 'Clés', 'Autre'] as $category)
-            <a href="{{ route('annonce.index', ['category' => $category]) }}" class="bg-gray-300 p-2 rounded">
-                {{ $category }}
-            </a>
-        @endforeach
-    </div>
-
-    <!-- Liste des annonces -->
-    <div class="grid grid-cols-3 gap-4">
-        @foreach($annonces as $annonce)
-            <div class="bg-white p-4 rounded shadow">
-                <a href="{{ route('annonce.show', $annonce->id) }}">
-                    <h2 class="text-xl font-bold">{{ $annonce->titre }}</h2>
-                    <p>{{ Str::limit($annonce->description, 100) }}</p>
-                </a>
+        <!-- Search Form -->
+        <form action="{{ route('annonce.index') }}" method="GET" class="mb-8">
+            <div class="flex items-center">
+                <input type="text" name="search" placeholder="Rechercher un objet..." 
+                       class="flex-1 p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit" 
+                        class="bg-blue-500 text-white p-3 rounded-r-lg hover:bg-blue-600 transition duration-100 flex items-center">
+                    <i class="fas fa-search mr-2"></i> Rechercher
+                </button>
             </div>
-        @endforeach
+        </form>
+
+        <!-- Category Filters -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Filtrer par catégorie</h2>
+            <div class="flex space-x-4">
+                @foreach(['Vêtements', 'Électronique', 'Clés', 'Autre'] as $category)
+                    <a href="{{ route('annonces.filterByCategory', $category) }}" 
+                       class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-blue-500 hover:text-white transition duration-300">
+                        <i class="fas fa-tag mr-2"></i>{{ $category }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Annonces List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach($annonces as $annonce)
+                <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <a href="{{ route('annonce.show', $annonce->id) }}" class="block">
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">{{ $annonce->titre }}</h2>
+                        <p class="text-gray-600 mb-4">{{ Str::limit($annonce->description, 100) }}</p>
+                        <div class="flex items-center text-gray-500">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            <span>{{ $annonce->created_at->format('d M Y') }}</span>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-8">
+            {{ $annonces->links() }}
+        </div>
     </div>
-
-    <!-- Pagination -->
-    {{ $annonces->links() }}
-
 @endsection
