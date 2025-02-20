@@ -11,6 +11,10 @@
             <p class="text-sm text-gray-500">Lieu : {{ $annonce->lieu }} | Date : {{ $annonce->date_perdu_trouve }}</p>
             <a href="{{ route('annonce.show', $annonce->id) }}" class="text-blue-500">Voir plus</a>
         </div>
+        @auth
+    <a href="{{ route('annonce.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Publier une annonce</a>
+@endauth
+
     @endforeach
 
     {{ $annonces->links() }}
