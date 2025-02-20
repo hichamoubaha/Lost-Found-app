@@ -1,40 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="max-w-4xl mx-auto p-6">
+    <!-- Announcement Title and Description -->
+    <h1 class="text-2xl font-bold">{{ $annonce->titre }}</h1>
+    <p class="text-gray-600">{{ $annonce->description }}</p>
+    <p class="text-sm text-gray-500">Lieu : {{ $annonce->lieu }} | Date : {{ $annonce->date_perdu_trouve }}</p>
 
-    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-        <h1 class="text-2xl font-bold">{{ $annonce->titre }}</h1>
-        <p class="text-gray-600">{{ $annonce->description }}</p>
+    <!-- Display Image if it exists -->
+    @if ($annonce->image)
+        <img src="{{ asset('storage/' . $annonce->image) }}" class="w-full h-64 object-cover rounded-lg my-4">
+    @else
+        <!-- Placeholder if no image is found -->
+        <p class="text-gray-500">Aucune image disponible</p>
+    @endif
 
-        <p><strong>Catégorie :</strong> {{ $annonce->categorie }}</p>
-        <p><strong>Lieu :</strong> {{ $annonce->lieu }}</p>
+    <!-- Display Comments -->
+    <h2 class="text-xl font-semibold mt-6">Commentaires</h2>
+    @foreach ($annonce->commentaires as $commentaire)
+        <div class="bg-gray-100 p-3 rounded my-2">
+            <p>{{ $commentaire->contenu }}</p>
+            <p class="text-sm text-gray-500">Posté par {{ $commentaire->user->name }}</p>
+        </div>
+    @endforeach
 
-        @if(!empty($annonce->photo))
-            <img src="{{ asset('storage/' . $annonce->photo) }}" class="w-full mt-4 rounded">
-        @endif
-
-        <p><strong>Contact :</strong></p>
-        <ul class="list-disc ml-5">
-            @if(!empty($annonce->contact_email))
-                <li>Email : <a href="mailto:{{ $annonce->contact_email }}" class="text-blue-500">{{ $annonce->contact_email }}</a></li>
-            @endif
-            @if(!empty($annonce->contact_telephone))
-                <li>Téléphone : <a href="tel:{{ $annonce->contact_telephone }}" class="text-blue-500">{{ $annonce->contact_telephone }}</a></li>
-            @endif
-        </ul>
-
-        @auth
-            @if(auth()->id() == $annonce->user_id)
-                <div class="mt-4 flex space-x-4">
-                    <a href="{{ route('annonce.edit', $annonce->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded">Modifier</a>
-                    <form action="{{ route('annonce.destroy', $annonce->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Supprimer</button>
-                    </form>
-                </div>
-            @endif
-        @endauth
-    </div>
-
+    <!-- Add Comment Form (Visible only for authenticated users) -->
+    @auth
+        <form action="{{ route('commentaire.store') }}" method="POST" class="mt-4">
+            @csrf
+            <input type="hidden" name="annonce_id" value="{{ $annonce->id }}">
+            <textarea name="contenu" class="w-full border rounded p-2" placeholder="Ajouter un commentaire..." required></textarea>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded mt-2">Commenter</button>
+        </form>
+    @else
+        <!-- Optionally display a message to non-authenticated users -->
+        <p class="mt-4 text-gray-500">Veuillez vous connecter pour ajouter un commentaire.</p>
+    @endauth
+</div>
 @endsection
