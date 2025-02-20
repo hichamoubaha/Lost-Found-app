@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 
 class AnnonceController extends Controller {
-    public function index() {
-        $annonces = Annonce::latest()->paginate(10);
+    public function index(Request $request) {
+        $query = $request->input('search');
+        $annonces = Annonce::when($query, function ($queryBuilder) use ($query) {
+            return $queryBuilder->where('titre', 'like', "%{$query}%");
+        })->latest()->paginate(10);
+    
         return view('annonces.index', compact('annonces'));
     }
 

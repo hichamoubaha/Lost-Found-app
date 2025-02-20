@@ -11,6 +11,7 @@
         <form action="{{ route('annonce.index') }}" method="GET" class="mb-8">
             <div class="flex items-center">
                 <input type="text" name="search" placeholder="Rechercher un objet..." 
+                       value="{{ request('search') }}" 
                        class="flex-1 p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <button type="submit" 
                         class="bg-blue-500 text-white p-3 rounded-r-lg hover:bg-blue-600 transition duration-100 flex items-center">
@@ -18,6 +19,13 @@
                 </button>
             </div>
         </form>
+
+        <!-- Display No Results Message -->
+        @if($annonces->isEmpty())
+            <div class="text-gray-500 text-center mt-4">
+                <p>Aucune annonce trouvée pour "{{ request('search') }}".</p>
+            </div>
+        @endif
 
         <!-- Category Filters -->
         <div class="mb-8">
