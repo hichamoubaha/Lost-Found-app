@@ -9,7 +9,7 @@
 
     <!-- Display Image if it exists -->
     @if ($annonce->image)
-        <img src="{{ asset('storage/' . $annonce->image) }}" class="w-full h-64 object-cover rounded-lg my-4">
+        <img src="{{ asset('storage/' . $annonce->image) }}" class="w-96 h-auto object-cover rounded-full mx-auto my-4">
     @else
         <!-- Placeholder if no image is found -->
         <p class="text-gray-500">Aucune image disponible</p>

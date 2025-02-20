@@ -10,11 +10,7 @@
     <nav class="bg-blue-500 text-white p-4">
         <div class="max-w-6xl mx-auto flex justify-between">
             <a href="{{ route('home') }}" class="text-lg font-bold">Lost & Found</a>
-            @auth
-                <a href="{{ route('annonce.create') }}" class="bg-white text-blue-500 px-4 py-2 rounded">Publier</a>
-            @else
-                <a href="{{ route('login') }}" class="bg-white text-blue-500 px-4 py-2 rounded">Connexion</a>
-            @endauth
+          
             @auth
     <form action="{{ route('logout') }}" method="POST">
         @csrf
@@ -24,7 +20,13 @@
 
         </div>
     </nav>
-    
+    <div class="text-center mt-4">
+        @auth
+            <a href="{{ route('annonce.create') }}" class="bg-white text-blue-500 px-4 py-2 rounded">Créer une annonce</a>
+        @else
+            <a href="{{ route('login') }}" class="bg-white text-blue-500 px-4 py-2 rounded">Connexion</a>
+        @endauth
+    </div>
     <div class="container mx-auto p-6">
         @yield('content')
     </div>
