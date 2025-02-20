@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Annonce;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\Storage;
 
 class AnnonceController extends Controller {
     public function index(Request $request) {
@@ -21,8 +20,9 @@ class AnnonceController extends Controller {
     public function create() {
         return view('annonces.create');
     }
+
     public function filterByCategory($category) {
-        $annonces = Annonce::where('categorie', $category)->latest()->paginate(10);
+        $annonces = Annonce::where('categorie', $category)->latest()->paginate(4);
         return view('annonces.index', compact('annonces'));
     }
 
@@ -57,9 +57,7 @@ class AnnonceController extends Controller {
         return redirect()->route('home')->with('success', 'Annonce ajoutée avec succès !');
     }
 
-    public function show($id)
-    {
-        $id = intval($id); // Convertit en entier
+    public function show($id) {
         $annonce = Annonce::findOrFail($id);
         return view('annonces.show', compact('annonce'));
     }
@@ -67,7 +65,7 @@ class AnnonceController extends Controller {
     public function edit($id) {
         $annonce = Annonce::findOrFail($id);
         if ($annonce->user_id !== Auth::id()) {
-            abort(403);
+            abort(403); // Unauthorized access
         }
         return view('annonces.edit', compact('annonce'));
     }
@@ -81,6 +79,7 @@ class AnnonceController extends Controller {
         $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'date_perdu_trouve' => 'required|date',
             'lieu' => 'required|string',
             'statut' => 'required|in:perdu,trouvé',
@@ -89,8 +88,28 @@ class AnnonceController extends Controller {
             'contact_telephone' => 'nullable|string',
         ]);
     
-        $annonce->update($request->all());
-    
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Optionally delete the old image if it exists
+            if ($annonce->image) {
+                Storage::disk('public')->delete($annonce->image);
+            }
+            $imagePath = $request->file('image')->store('annonces', 'public');
+            $annonce->image = $imagePath; // Update the image path
+        }
+
+        // Update other fields
+        $annonce->titre = $request->titre;
+        $annonce->description = $request->description;
+        $annonce->date_perdu_trouve = $request->date_perdu_trouve;
+        $annonce->lieu = $request->lieu;
+        $annonce->statut = $request->statut;
+        $annonce->categorie = $request->categorie;
+        $annonce->contact_email = $request->contact_email;
+        $annonce->contact_telephone = $request->contact_telephone;
+
+        $annonce->save(); // Save the updated announcement
+
         return redirect()->route('annonce.show', $id)->with('success', 'Annonce mise à jour !');
     }
 
@@ -99,19 +118,20 @@ class AnnonceController extends Controller {
         if ($annonce->user_id !== Auth::id()) {
             abort(403); // Unauthorized access
         }
-    
+
+        // Optionally delete the image if it exists
+        if ($annonce->image) {
+            Storage::disk('public')->delete($annonce->image);
+        }
+
         $annonce->delete();
         return redirect()->route('home')->with('success', 'Annonce supprimée.');
     }
 
-    public function dashboard()
-{
-    return view('dashboard', [
-        'total_annonces' => Annonce::count(),
-        'mes_annonces' => Annonce::where('user_id', Auth::id())->count(),
-    ]);
+    public function dashboard() {
+        return view('dashboard', [
+            'total_annonces' => Annonce::count(),
+            'mes_annonces' => Annonce::where('user_id', Auth::id())->count(),
+        ]);
+    }
 }
-
-
-}
-

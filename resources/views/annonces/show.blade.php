@@ -6,7 +6,8 @@
     <h1 class="text-2xl font-bold">{{ $annonce->titre }}</h1>
     <p class="text-gray-600">{{ $annonce->description }}</p>
     <p class="text-sm text-gray-500">Lieu : {{ $annonce->lieu }} | Date : {{ $annonce->date_perdu_trouve }}</p>
-
+    <p class="text-sm text-gray-500">Email : {{ $annonce->contact_email }}</p>
+    <p class="text-sm text-gray-500">Telephone : {{ $annonce->contact_telephone}}</p>
     <!-- Display Image if it exists -->
     @if ($annonce->image)
         <img src="{{ asset('storage/' . $annonce->image) }}" class="w-96 h-auto object-cover rounded-full mx-auto my-4">
@@ -33,7 +34,7 @@
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded mt-2">Commenter</button>
         </form>
     @else
-        <!-- Optionally display a message to non-authenticated users -->
+        
         <p class="mt-4 text-gray-500">Veuillez vous connecter pour ajouter un commentaire.</p>
     @endauth
 </div>

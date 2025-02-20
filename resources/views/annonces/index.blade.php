@@ -45,6 +45,9 @@
             @foreach($annonces as $annonce)
                 <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <a href="{{ route('annonce.show', $annonce->id) }}" class="block">
+                        @if($annonce->image)
+                            <img src="{{ asset('storage/' . $annonce->image) }}" alt="{{ $annonce->titre }}" class="w-full h-48 object-cover rounded mb-4">
+                        @endif
                         <h2 class="text-xl font-bold text-gray-800 mb-2">{{ $annonce->titre }}</h2>
                         <p class="text-gray-600 mb-4">{{ Str::limit($annonce->description, 100) }}</p>
                         <div class="flex items-center text-gray-500">
