@@ -46,5 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('annonces', AnnonceController::class)->except(['index', 'show']);
 });
 
+Route::get('/dashboard', [AnnonceController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+
 
 require __DIR__.'/auth.php';

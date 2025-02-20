@@ -6,6 +6,8 @@ use App\Models\Annonce;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
+
 class AnnonceController extends Controller {
     public function index() {
         $annonces = Annonce::latest()->paginate(10);
@@ -91,5 +93,14 @@ class AnnonceController extends Controller {
         $annonce->delete();
         return redirect()->route('home')->with('success', 'Annonce supprimée.');
     }
+
+    public function dashboard()
+{
+    return view('dashboard', [
+        'total_annonces' => Annonce::count(),
+        'mes_annonces' => Annonce::where('user_id', Auth::id())->count(),
+    ]);
+}
+
 }
 
