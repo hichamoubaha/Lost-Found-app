@@ -15,6 +15,13 @@
             @else
                 <a href="{{ route('login') }}" class="bg-white text-blue-500 px-4 py-2 rounded">Connexion</a>
             @endauth
+            @auth
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="text-white">Déconnexion</button>
+    </form>
+@endauth
+
         </div>
     </nav>
     
