@@ -12,7 +12,7 @@ class AnnonceController extends Controller {
         $query = $request->input('search');
         $annonces = Annonce::when($query, function ($queryBuilder) use ($query) {
             return $queryBuilder->where('titre', 'like', "%{$query}%");
-        })->latest()->paginate(10);
+        })->latest()->paginate(3);
     
         return view('annonces.index', compact('annonces'));
     }
@@ -22,7 +22,7 @@ class AnnonceController extends Controller {
     }
 
     public function filterByCategory($category) {
-        $annonces = Annonce::where('categorie', $category)->latest()->paginate(4);
+        $annonces = Annonce::where('categorie', $category)->latest()->paginate(3);
         return view('annonces.index', compact('annonces'));
     }
 
