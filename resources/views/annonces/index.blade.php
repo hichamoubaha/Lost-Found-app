@@ -52,6 +52,23 @@
                             <span>{{ $annonce->created_at->format('d M Y') }}</span>
                         </div>
                     </a>
+
+                    <!-- Update and Delete Buttons -->
+                    <div class="mt-4 flex justify-between">
+                        <a href="{{ route('annonce.edit', $annonce->id) }}" 
+                           class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-200">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+
+                        <form action="{{ route('annonces.destroy', $annonce->id) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                                    class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </form>
+                    </div>
                 </div>
             @endforeach
         </div>

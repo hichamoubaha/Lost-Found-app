@@ -20,7 +20,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/commentaire', [CommentaireController::class, 'store'])->name('commentaire.store');
 });
 
-
+Route::resource('annonces', AnnonceController::class)->middleware('auth');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
