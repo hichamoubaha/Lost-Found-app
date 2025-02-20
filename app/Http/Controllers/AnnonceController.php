@@ -75,9 +75,9 @@ class AnnonceController extends Controller {
     public function update(Request $request, $id) {
         $annonce = Annonce::findOrFail($id);
         if ($annonce->user_id !== Auth::id()) {
-            abort(403);
+            abort(403); // Unauthorized access
         }
-
+    
         $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'required',
@@ -88,18 +88,18 @@ class AnnonceController extends Controller {
             'contact_email' => 'required|email',
             'contact_telephone' => 'nullable|string',
         ]);
-
+    
         $annonce->update($request->all());
-
+    
         return redirect()->route('annonce.show', $id)->with('success', 'Annonce mise à jour !');
     }
 
     public function destroy($id) {
         $annonce = Annonce::findOrFail($id);
         if ($annonce->user_id !== Auth::id()) {
-            abort(403);
+            abort(403); // Unauthorized access
         }
-
+    
         $annonce->delete();
         return redirect()->route('home')->with('success', 'Annonce supprimée.');
     }
