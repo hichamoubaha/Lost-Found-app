@@ -14,5 +14,7 @@
             <p class="text-3xl">{{ $mes_annonces }}</p>
         </div>
     </div>
+    <a href="{{ route('annonce.index') }}">Voir les annonces</a>
+
 </div>
 @endsection

@@ -1,22 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Objets Perdus & Trouvés</h1>
 
-    @foreach ($annonces as $annonce)
-        <div class="bg-white shadow-md rounded-lg p-4 mb-4">
-            <h2 class="text-xl font-semibold">{{ $annonce->titre }}</h2>
-            <p class="text-gray-600">{{ $annonce->description }}</p>
-            <p class="text-sm text-gray-500">Lieu : {{ $annonce->lieu }} | Date : {{ $annonce->date_perdu_trouve }}</p>
-            <a href="{{ route('annonce.show', $annonce->id) }}" class="text-blue-500">Voir plus</a>
-        </div>
-        @auth
-    <a href="{{ route('annonce.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Publier une annonce</a>
-@endauth
+    <h1 class="text-2xl font-bold">Annonces</h1>
 
-    @endforeach
+    <!-- Formulaire de recherche -->
+    <form action="{{ route('annonce.index') }}" method="GET" class="mb-4">
+        <input type="text" name="search" placeholder="Rechercher un objet..." class="p-2 border rounded">
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded">Rechercher</button>
+    </form>
 
+    <!-- Filtrer par catégorie -->
+    <div class="mb-4">
+        @foreach(['Vêtements', 'Électronique', 'Clés', 'Autre'] as $category)
+            <a href="{{ route('annonce.index', ['category' => $category]) }}" class="bg-gray-300 p-2 rounded">
+                {{ $category }}
+            </a>
+        @endforeach
+    </div>
+
+    <!-- Liste des annonces -->
+    <div class="grid grid-cols-3 gap-4">
+        @foreach($annonces as $annonce)
+            <div class="bg-white p-4 rounded shadow">
+                <a href="{{ route('annonce.show', $annonce->id) }}">
+                    <h2 class="text-xl font-bold">{{ $annonce->titre }}</h2>
+                    <p>{{ Str::limit($annonce->description, 100) }}</p>
+                </a>
+            </div>
+        @endforeach
+    </div>
+
+    <!-- Pagination -->
     {{ $annonces->links() }}
-</div>
+
 @endsection

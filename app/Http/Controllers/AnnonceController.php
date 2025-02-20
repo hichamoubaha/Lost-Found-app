@@ -49,11 +49,13 @@ class AnnonceController extends Controller {
         return redirect()->route('home')->with('success', 'Annonce ajoutée avec succès !');
     }
 
-    public function show($id) {
+    public function show($id)
+    {
+        $id = intval($id); // Convertit en entier
         $annonce = Annonce::findOrFail($id);
         return view('annonces.show', compact('annonce'));
     }
-
+    
     public function edit($id) {
         $annonce = Annonce::findOrFail($id);
         if ($annonce->user_id !== Auth::id()) {
